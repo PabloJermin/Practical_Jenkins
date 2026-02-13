@@ -19,6 +19,22 @@ pipeline {
             }
         }
 
+    stage('Docker Login') {
+        steps {
+            withCredentials([usernamePassword(
+                credentialsID: 'dockerhub-credentials',
+                usernameVariablw: 'DOCKER_USERNAME',
+                passwordVariable: 'DOCKER_PASSWORD')])
+                    {
+                    sh '''
+                        echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                        docker build -t sergio_pablo/jenkinsPro:latest .
+                        docker push sergio_pablo/jenkinsPro:latest
+                        '''
+                    }
+                }
+    }
+
         stage('Checkout Jenkins Upgrade3 Git Repository') {
             steps {
                 script {
