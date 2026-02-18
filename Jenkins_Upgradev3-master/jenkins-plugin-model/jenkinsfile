@@ -57,6 +57,20 @@ pipeline {
                     // Print the job name and build number
                     echo "Job Name: $jobName"
                     echo "Build Number: $buildNumber"
+
+
+                withCredentials([usernamePassword(
+                        credentialsId: 'docker-hub-credentials',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )]) {
+                        sh '''
+                            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                            docker build -t myusername/myapp:${BUILD_NUMBER} .
+                            docker push myusername/myapp:${BUILD_NUMBER}
+                        '''}
+                        
+
                 
                 withCredentials([usernamePassword(credentialsId: '1bb08ca6-f3cb-4ec7-953f-c3f7a93401ac', usernameVariable: 'DOCKER_HUB_USER', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {                      
                     sh "chmod +x ./jenkins-plugin-model/ci/04-push.sh"
