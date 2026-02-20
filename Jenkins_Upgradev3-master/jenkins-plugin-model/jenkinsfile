@@ -59,24 +59,24 @@ pipeline {
                     echo "Build Number: $buildNumber"
 
 
-               // withCredentials([usernamePassword(
-                      //  credentialsId: 'Docker-Cred-ID',
-                      //  usernameVariable: 'DOCKER_HUB_USER',
-                     //   passwordVariable: 'DOCKER_HUB_PASSWORD'
-                    //)]) {
-                      //  sh '''
-                         //   echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USER --password-stdin
-                         //   docker build -t myusername/myapp:${BUILD_NUMBER} .
-                          //  docker push myusername/myapp:${BUILD_NUMBER}
-                        //'''}
+                withCredentials([usernamePassword(
+                        credentialsId: 'Docker-Cred-ID',
+                        usernameVariable: 'DOCKER_HUB_USER',
+                        passwordVariable: 'DOCKER_HUB_PASSWORD'
+                    )]) {
+                        sh '''
+                            echo -n $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USER --password-stdin
+                            docker build -t myusername/myapp:${BUILD_NUMBER} .
+                            docker push myusername/myapp:${BUILD_NUMBER}
+                        '''}
                         
 // 1bb08ca6-f3cb-4ec7-953f-c3f7a93401ac
                 
-                  withCredentials([usernamePassword(credentialsId: 'Docker-Cred-ID', usernameVariable: 'DOCKER_HUB_USER', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {                      
-                     sh "chmod +x ./jenkins-plugin-model/ci/04-push.sh"
-                    sh "./jenkins-plugin-model/ci/04-push.sh $buildNumber"
-                 }
-                 echo "Build Completed - Job Name: $jobName  --  Build Number: $buildNumber"
+                  // withCredentials([usernamePassword(credentialsId: 'Docker-Cred-ID', usernameVariable: 'donpee', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {                      
+                    // sh "chmod +x ./jenkins-plugin-model/ci/04-push.sh"
+                   // sh "./jenkins-plugin-model/ci/04-push.sh $buildNumber"
+               //  }
+               //  echo "Build Completed - Job Name: $jobName  --  Build Number: $buildNumber"
             }
         }
     }
